@@ -1,0 +1,119 @@
+/* ===== Reset some default styles ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== Career Page Container ===== */
+.career-page {
+  margin-left: 300px; /* Sidebar width */
+  padding: 40px;
+  min-height: 100vh;
+  background: #f9fafb;
+  transition: margin-left 0.3s ease;
+}
+
+/* ===== Header ===== */
+.career-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.career-header p {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+/* ===== Career Card ===== */
+.career-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  max-width: 700px;
+  margin-bottom: 30px;
+}
+
+/* ===== Form Styles ===== */
+.career-form label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  margin-top: 15px;
+}
+
+.career-form input,
+.career-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.career-form input:focus,
+.career-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* ===== Button ===== */
+.career-form button {
+  margin-top: 25px;
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.career-form button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* ===== Back Link ===== */
+.career-back {
+  display: inline-block;
+  margin-top: 15px;
+  color: #3b82f6;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.career-back:hover {
+  color: #1d4ed8;
+}
+
+/* ===== Responsive for smaller screens ===== */
+@media (max-width: 1024px) {
+  .career-page {
+    margin-left: 200px;
+    padding: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .career-page {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .career-card {
+    padding: 20px;
+  }
+}

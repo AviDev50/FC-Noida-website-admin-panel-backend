@@ -1,0 +1,355 @@
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page-wrapper {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+
+    background:white;
+  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  color: black;
+}
+
+#fullMessage {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+/* ===============================
+   PAGE HEADER
+================================ */
+.blog-header {
+
+    background: white;
+  padding: 22px 26px;
+  border-radius: 14px;
+  margin-bottom: 25px;
+  /* box-shadow: 0 15px 35px rgba(0,0,0,0.6); */
+  /* border: 1px solid #020617; */
+  color: black;
+}
+
+.blog-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color:black;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.blog-header p {
+  margin-top: 6px;
+  color:black;
+  font-size: 0.95rem;
+}
+
+/* ===============================
+   NO DATA
+================================ */
+.no-data {
+  background: #020617;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+/* ===============================
+   TABLE WRAPPER
+================================ */
+.table-responsive {
+ 
+  padding: 20px;
+  border-radius: 16px;
+  overflow-x: auto;
+
+}
+
+/* ===============================
+   ENQUIRY TABLE
+================================ */
+.enquiry-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ---------- TABLE HEADER ---------- */
+.enquiry-table thead {
+background-color: white;
+  border-bottom: 1px solid #334155;
+}
+
+.enquiry-table th {
+  padding: 14px 16px;
+  color: #13151b;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ---------- TABLE BODY ---------- */
+.enquiry-table td {
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.enquiry-table tbody tr {
+  height: 78px;
+  border-bottom: 1px solid #020617;
+  transition: background 0.2s ease;
+}
+
+.enquiry-table tbody tr:hover {
+  background: rgba(148, 163, 184, 0.05);
+}
+
+/* ===============================
+   ICONS
+================================ */
+.enquiry-table i {
+  color: #60a5fa;
+  margin-right: 6px;
+}
+
+/* ===============================
+   MESSAGE COLUMN
+================================ */
+.message-cell {
+  max-width: 280px;
+}
+
+/* VIEW BUTTON */
+.btn-view {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+}
+
+.btn-view:hover {
+  transform: scale(1.08);
+}
+
+/* ===============================
+   ACTION COLUMN
+================================ */
+.action-cell {
+  display: flex;
+  justify-content: center;
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fee2e2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.btn-delete:hover {
+  transform: scale(1.08);
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #111827;
+  background: #e5e7eb;
+  transition: 0.25s;
+  margin-left: 30px;
+}
+
+.btn-home:hover {
+
+  transform: translateX(-4px);
+}
+
+/* ===============================
+   MODAL (MESSAGE VIEW)
+================================ */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  /* background: rgba(0, 0, 0, 0.7); */
+}
+
+.modal-content {
+  background-color: white;
+  width: 40%;
+  margin: 8% auto;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+  animation: fadeIn 0.3s ease;
+  color: black;
+}
+
+.modal-content h3 {
+    color: black;
+  margin-bottom: 12px;
+}
+
+.modal-content p {
+    color: black;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 22px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #ffffff;
+}
+
+/* ===============================
+   ANIMATION
+================================ */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin-top: 25%;
+  }
+
+  .enquiry-table th,
+  .enquiry-table td {
+    padding: 10px;
+    font-size: 0.7rem;
+  }
+}
+
+
+/* delete model css */
+
+/* ================= DELETE MODAL ================= */
+.delete-modal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 360px;       /* slightly bigger */
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 9999;
+  font-family: "Segoe UI", sans-serif;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px 20px;
+  animation: slideDown 0.3s ease;
+  gap: 12px;
+}
+
+.delete-modal p {
+  font-size: 15px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Buttons */
+.delete-modal .btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.delete-modal .btn-confirm {
+  background: #ef4444;
+  color: #fff;
+}
+
+.delete-modal .btn-confirm:hover {
+  background: #dc2626;
+}
+
+.delete-modal .btn-cancel {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.delete-modal .btn-cancel:hover {
+  background: #d1d5db;
+}
+
+/* Slide down animation */
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

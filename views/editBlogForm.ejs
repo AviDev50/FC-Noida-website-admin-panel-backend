@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Blog</title>
+
+  <!-- Summernote CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/summerNote.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
+
+  <!-- Summernote JS -->
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <h2> Edit Blog</h2>
+
+    <form action="/admin/blogs/edit/<%= blog.id %>" method="POST" enctype="multipart/form-data">
+
+   <form action="/admin/blogs/edit/<%= blog.id %>" method="POST" enctype="multipart/form-data">
+
+  <div class="section">
+    <h3>Basic Information</h3>
+
+```
+<div class="form-grid">
+
+  <div class="field">
+    <label>Blog Category</label>
+    <select name="category_id" required>
+      <option value="">Select Category</option>
+
+      <% categories.forEach(cat => { %>
+        <option
+          value="<%= cat.category_id %>"
+          <%= cat.category_id === blog.category_id ? 'selected' : '' %>>
+          <%= cat.category_name %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Status</label>
+    <select name="status">
+      <option value="draft" <%= blog.status === 'draft' ? 'selected' : '' %>>
+        Draft
+      </option>
+
+      <option value="published" <%= blog.status === 'published' ? 'selected' : '' %>>
+        Published
+      </option>
+    </select>
+  </div>
+
+  <div class="field full">
+    <label>Blog Title</label>
+    <input
+      type="text"
+      name="title"
+      value="<%= blog.title %>"
+      required
+    />
+  </div>
+
+  <div class="field">
+    <label>Slug</label>
+    <input
+      type="text"
+      name="slug"
+      value="<%= blog.slug %>"
+    />
+  </div>
+
+  <div class="field">
+    <label>Author Name</label>
+    <input
+      type="text"
+      name="author_name"
+      value="<%= blog.author_name || 'Founder Code Team' %>"
+    />
+  </div>
+
+  <div class="field full">
+    <label>Short Description</label>
+    <textarea
+      name="short_description"
+      rows="4"
+    ><%= blog.short_description %></textarea>
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <div class="section">
+    <h3>SEO Settings</h3>
+
+```
+<div class="form-grid">
+
+  <div class="field full">
+    <label>Meta Title</label>
+    <input
+      type="text"
+      name="meta_title"
+      value="<%= blog.meta_title || '' %>"
+    />
+  </div>
+
+  <div class="field full">
+    <label>Meta Description</label>
+    <textarea
+      name="meta_description"
+      rows="4"
+    ><%= blog.meta_description || '' %></textarea>
+  </div>
+
+  <div class="field full">
+    <label>Image Alt Text</label>
+    <input
+      type="text"
+      name="image_alt"
+      value="<%= blog.image_alt || '' %>"
+    />
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <div class="section">
+    <h3>Publishing</h3>
+
+```
+<div class="form-grid">
+
+  <div class="field">
+    <label>Reading Time</label>
+    <input
+      type="number"
+      name="reading_time"
+      min="1"
+      value="<%= blog.reading_time || 1 %>"
+    />
+  </div>
+
+  <div class="field">
+    <label>Published At</label>
+    <input
+      type="datetime-local"
+      name="published_at"
+      value="<%= blog.published_at ? new Date(blog.published_at).toISOString().slice(0,16) : '' %>"
+    />
+  </div>
+
+  <div class="field">
+    <label>Featured Blog</label>
+    <select name="is_featured">
+      <option value="0" <%= blog.is_featured == 0 ? 'selected' : '' %>>
+        No
+      </option>
+
+      <option value="1" <%= blog.is_featured == 1 ? 'selected' : '' %>>
+        Yes
+      </option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Blog Image</label>
+    <input type="file" name="image" />
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <div class="section">
+    <h3>Content</h3>
+
+```
+<textarea id="summernote" name="content">
+```
+
+<%- blog.content %> </textarea>
+
+  </div>
+
+  <button type="submit" class="submit-btn">
+    <i class="fa fa-save"></i>
+    Update Blog
+  </button>
+
+</form>
+
+    </form>
+  </div>
+
+ <!-- Summernote Initialization -->
+  <script>
+    $(document).ready(function() {
+      $('#summernote').summernote({
+        placeholder: 'Write your blog content here...',
+        tabsize: 2,
+        height: 300,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'italic', 'clear', 'fontsize']],
+          ['fontname', ['fontname']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        callbacks: {
+          onImageUpload: function(files) {
+            for (let i = 0; i < files.length; i++) {
+              let reader = new FileReader();
+              reader.onload = function(e) {
+                $('#summernote').summernote('insertImage', e.target.result);
+              }
+              reader.readAsDataURL(files[i]);
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Back Button -->
+  <a href="/admin/dashboard" class="btn-home">
+      <i class="fa fa-arrow-left"></i> Back 
+  </a>
+
+</body>
+</html>

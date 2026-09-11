@@ -1,0 +1,124 @@
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page-wrapper {
+  margin-left: 260px;
+  padding: 30px;
+  max-width: 800px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ===============================
+   HEADING
+================================ */
+.page-wrapper h2 {
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #222;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+/* ===============================
+   FORM
+================================ */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===============================
+   LABEL
+================================ */
+form label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+}
+
+/* ===============================
+   INPUT / TEXTAREA / SELECT
+================================ */
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* ===============================
+   SELECT
+================================ */
+form select {
+  cursor: pointer;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn-save {
+  margin-top: 10px;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+.btn-home {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.btn-home:hover {
+  color: #4f46e5;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin-left: 0;
+    padding: 20px;
+  }
+}

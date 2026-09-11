@@ -1,0 +1,274 @@
+/* ================= SIDEBAR ================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  padding: 22px 16px;
+  overflow-y: auto;
+  background-color: #ffffff;       /* white bg */
+  border-right: 1px solid #e5e7eb;  /* light border */
+}
+
+/* ================= GLOBAL FONT ================= */
+body {
+  font-family: "Inter", "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f9fafb;
+  color: #111827;
+}
+
+
+/* ================= PROFILE ================= */
+.sidebar .profile {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.sidebar .profile img {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 1px solid #2563eb;
+  margin-bottom: 12px;
+}
+
+.sidebar .profile h4 {
+  color: #111827;   /* dark text */
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sidebar .profile span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ================= MENU ================= */
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+/* ================= LINKS ================= */
+.sidebar ul li a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #374151;     /* normal text */
+  text-decoration: none;
+  border-radius: 10px;
+  transition: color 0.25s ease;
+}
+
+/* ICON */
+.sidebar ul li a i {
+  font-size: 18px;
+  min-width: 22px;
+  color: #4b5563;
+}
+
+/* ================= UNDERLINE ================= */
+.sidebar ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 14px;
+  width: 0;
+  height: 2px;
+  background: #2563eb;   /* blue underline */
+  border-radius: 4px;
+  transition: width 0.35s ease;
+}
+
+/* ================= HOVER ================= */
+.sidebar ul li a:hover {
+  color: #111827;
+}
+
+.sidebar ul li a:hover::after {
+  width: calc(100% - 28px);
+}
+
+/* ================= ACTIVE ================= */
+.sidebar ul li a.active {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebar ul li a.active::after {
+  width: calc(100% - 28px);
+}
+
+/* ================= LOGOUT ================= */
+.sidebar ul li.logout a {
+  color: #dc2626;
+}
+
+.sidebar ul li.logout a::after {
+  background: #dc2626;
+}
+
+/* ================= SCROLLBAR ================= */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  background: #f9fafb;   /* light page bg */
+}
+
+.content .sub {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #374151;
+}
+
+/* ================= DASHBOARD CARDS ================= */
+/* ---------------- Content Wrapper ---------------- */
+.content-wrapper {
+  margin-left: 300px; /* updated sidebar width */
+  padding: 40px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #1f2937;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.content-header h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.content-header p {
+  color: #6b7280;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+/* ---------------- Cards ---------------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 15px; /* reduced padding */
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100px; /* compact height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card h2 {
+  font-size: 28px; /* slightly smaller */
+  margin-bottom: 6px;
+}
+
+.card p {
+  font-size: 14px; /* smaller for compact look */
+  color: #6b7280;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.card.blue { background: #3b82f6; color: white; }
+.card.green { background: #10b981; color: white; }
+.card.yellow { background: #facc15; color: #1f2937; }
+.card.red { background: #ef4444; color: white; }
+
+
+/* ---------------- Features Section ---------------- */
+.expertise-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.expertise-section h3 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.expertise-section p {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+}
+
+.expertise-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.expert-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.expert-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.expert-card .icon-bg {
+  width: 60px;
+  height: 60px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 15px auto;
+  transition: background 0.3s ease;
+}
+
+.expert-card:hover .icon-bg {
+  background: #2563eb;
+}
+
+.expert-card h4 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.expert-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <%- include("partials/sidebar") %>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <div class="content-header">
+      <h1>Welcome back, Admin 👋</h1>
+      <p>Here's an overview of your dashboard</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card blue">
+        <h2><%= employeeCount %></h2>
+        <p style="color: white;">Employees</p>
+      </div>
+      <div class="card green">
+        <h2><%= blogCount %></h2>
+        <p style="color: black;">Blogs</p>
+      </div>
+      <div class="card yellow">
+        <h2><%= enquiryCount %></h2>
+        <p style="color: black;">Enquiries</p>
+      </div>
+      <div class="card red">
+        <h2><%= careerCount %></h2>
+        <p style="color: white;">Career</p>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="expertise-section">
+  <h3>Our Expertise</h3>
+  <div class="expertise-cards">
+    <div class="expert-card">
+      <div class="icon-bg"><span>💻</span></div>
+      <h4>Web Development</h4>
+      <p>Crafting responsive websites with clean UI/UX and modern frameworks.</p>
+    </div>
+    <div class="expert-card">
+      <div class="icon-bg"><span>☁️</span></div>
+      <h4>Cloud Solutions</h4>
+      <p>Deploy scalable and secure cloud solutions tailored to your needs.</p>
+    </div>
+    <div class="expert-card">
+      <div class="icon-bg"><span>⚡</span></div>
+      <h4>Fast Performance</h4>
+      <p>Optimized systems for smooth and lightning-fast user experience.</p>
+    </div>
+    <div class="expert-card">
+      <div class="icon-bg"><span>🔒</span></div>
+      <h4>Security</h4>
+      <p>Top-notch security protocols to keep your data safe and private.</p>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+
+</body>
+</html>

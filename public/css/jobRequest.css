@@ -1,0 +1,172 @@
+/* PAGE WRAPPER */
+.page-wrapper {
+  margin-left: 300px; /* Sidebar space */
+  padding: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f9fafb; /* optional light bg */
+}
+
+/* TABLE WRAPPER */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* EMPLOYEE TABLE */
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  min-width: 600px; /* ensures table does not shrink too much */
+}
+
+/* TABLE CELLS */
+.employee-table th,
+.employee-table td {
+  padding: 12px 10px;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  white-space: nowrap; /* keeps content in one line */
+}
+
+/* TABLE HEADER */
+.employee-table th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+/* VIEW BUTTON */
+.btn-view {
+  padding: 6px 12px;
+  background: #2563eb;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 13px;
+  display: inline-block;
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+  padding: 6px 12px;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* NO DATA */
+.no-data {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+
+
+/* DELETE BUTTON */
+.btn-delete {
+  padding: 7px 14px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+/* HOVER EFFECT */
+.btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(185, 28, 28, 0.35);
+}
+
+/* ACTIVE CLICK */
+.btn-delete:active {
+  transform: scale(0.96);
+}
+
+/* OPTIONAL ICON */
+.btn-delete i {
+  font-size: 12px;
+}
+
+
+/* ================= TOAST POPUP ================= */
+.toast-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  border-left: 5px solid #ef4444;
+  padding: 15px 20px;
+  min-width: 280px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease;
+}
+
+.toast-popup p {
+  margin: 0;
+  font-size: 14px;
+  color: #111827;
+}
+
+.toast-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.toast-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  background: #e5e7eb;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.toast-actions button:hover {
+  background: #d1d5db;
+}
+
+.toast-actions .btn-confirm {
+  padding: 6px 12px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.toast-actions .btn-confirm:hover {
+  background: #dc2626;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+

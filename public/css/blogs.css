@@ -1,0 +1,376 @@
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page-wrapper {
+  margin-left: 250px;
+  padding: 30px;
+  min-height: 100vh;
+  /* background: #0b1220; */
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+  /* color: #e5e7eb; */
+  background-color: white;
+  color: black;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.blog-header {
+  padding: 10px 46px;
+  border-radius: 14px;
+  margin-bottom: 25px;
+}
+
+.blog-header h1 {
+  font-size: 1.9rem;
+  color: black;
+  margin-bottom: 6px;
+}
+
+.blog-header p {
+  color: black;
+  font-size: 0.95rem;
+}
+
+/* ===============================
+   ADD BLOG BUTTON
+================================ */
+.add-blog-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  margin-left: 20px;
+}
+
+.add-blog-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59,130,246,0.4);
+}
+
+/* ===============================
+   TABLE WRAPPER
+================================ */
+.table-wrapper {
+  /* background: #0b1220; */
+  padding: 20px;
+  border-radius: 16px;
+  overflow-x: auto;
+  /* width: 1100px; */
+}
+
+/* ===============================
+   BLOG TABLE
+================================ */
+.blog-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* ---------- HEADER ---------- */
+.blog-table thead {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.blog-table thead th {
+  color: #1e293b;
+  font-weight: 800;
+}
+
+
+
+.blog-table th {
+  padding: 14px 16px;
+  color: #e0e7ff;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ---------- BODY ---------- */
+.blog-table td {
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blog-table tbody tr {
+  height: 78px;
+  border-bottom: 1px solid #020617;
+  transition: background 0.2s ease;
+}
+
+.blog-table tbody tr:hover {
+  background: rgba(148, 163, 184, 0.05);
+}
+
+/* ===============================
+   IMAGE
+================================ */
+.table-img {
+  width: 80px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+/* ===============================
+   SLUG
+================================ */
+.slug {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  max-width: 260px;
+}
+
+/* ===============================
+   CATEGORY BADGE
+================================ */
+.category-badge {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #eef2ff;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===============================
+   STATUS
+================================ */
+.status.active {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #022c22;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status.inactive {
+  background: linear-gradient(135deg, #facc15, #eab308);
+  color: #422006;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+td .btn-edit,
+td .btn-view,
+td .btn-delete {
+  padding: 6px 12px;
+  margin: 2px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+td .btn-edit {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+}
+
+td .btn-edit:hover {
+  transform: scale(1.08);
+}
+
+td .btn-view {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+}
+
+td .btn-view:hover {
+  transform: scale(1.08);
+}
+
+td .btn-delete {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+}
+
+td .btn-delete:hover {
+  transform: scale(1.08);
+}
+
+/* ===============================
+   NO DATA
+================================ */
+.no-blog {
+  background: #020617;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #111827, #020617);
+  color: #ffffff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+  transform: translateX(-4px);
+}
+
+/* ===============================
+   TRUNCATE
+================================ */
+.truncate {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .blog-table th,
+  .blog-table td {
+    font-size: 0.7rem;
+    padding: 10px;
+  }
+}
+
+/* ===============================
+   MODAL BLOG CONTENT
+================================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: #fff;
+  width: 60%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.modal-box h2 {
+  margin-bottom: 15px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+/* ===============================
+   DELETE MODAL TOP-RIGHT
+================================ */
+#deleteModal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 9999;
+  font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
+#deleteModal .modal-content {
+  padding: 20px 25px;
+  text-align: center;
+}
+
+#deleteModal .btn {
+  padding: 10px 18px;
+  margin: 10px 5px 0 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+#deleteModal .btn-confirm {
+  background: #ef4444;
+  color: #fff;
+}
+
+#deleteModal .btn-confirm:hover {
+  background: #dc2626;
+}
+
+#deleteModal .btn-cancel {
+  background: #e5e7eb;
+}
+
+#deleteModal .btn-cancel:hover {
+  background: #d1d5db;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

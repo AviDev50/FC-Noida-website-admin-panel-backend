@@ -1,0 +1,128 @@
+<%- include('partials/sidebar') %>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<link rel="stylesheet" href="/css/admin.css" />
+<link rel="stylesheet" href="/css/enquiry.css" />
+
+<div class="page-wrapper">
+  <div class="blog-header">
+    <h1><i class="fa-solid fa-school"></i> School Enquiries</h1>
+    <p>Manage all school enquiries here</p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="enquiry-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+   
+      <tbody id="enquiryTableBody"></tbody>
+
+    </table>
+  </div>
+
+  <a href="/admin/dashboard" class="btn-home">
+    <i class="fa fa-arrow-left"></i> Back to Dashboard
+  </a>
+</div>
+
+<script>
+  const API_BASE = "https://fcadmin.fctesting.shop/admin";
+
+  async function loadEnquiries() {
+    try {
+      const res = await fetch(`${API_BASE}/all`);
+      const result = await res.json();
+
+      console.log("API DATA:", result);
+
+      const tableBody = document.getElementById("enquiryTableBody");
+
+      tableBody.innerHTML = "";
+
+      if (!result.data || result.data.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; padding:20px;">
+              No Enquiries Found 😔
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      result.data.forEach((item, index) => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td><i class="fa-solid fa-user"></i> ${item.name}</td>
+            <td><i class="fa-solid fa-envelope"></i> ${item.email}</td>
+            <td><i class="fa-solid fa-phone"></i> ${item.phone}</td>
+            <td>
+              <button class="btn-delete" onclick="deleteEnquiry(${item.id})">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  }
+
+  async function deleteEnquiry(id) {
+
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this enquiry?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+
+      const res = await fetch(`${API_BASE}/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+
+        const row = document
+          .querySelector(`button[onclick="deleteEnquiry(${id})"]`)
+          .closest("tr");
+
+        row.remove();
+
+        alert("Enquiry deleted successfully ✅");
+
+      } else {
+
+        alert("Failed to delete enquiry ❌");
+
+      }
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Something went wrong ❌");
+
+    }
+  }
+
+  loadEnquiries();
+</script>

@@ -1,0 +1,130 @@
+<%- include('partials/sidebar') %>
+<link rel="stylesheet" href="/css/admin.css" />
+<link rel="stylesheet" href="/css/career.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <h2>Career Opportunities</h2>
+    <p>Check out our latest job openings</p>
+  </div>
+
+  <a href="/admin/career/add" class="btn-add-career">
+    <i class="fa fa-plus"></i> Add New Job
+  </a>
+
+  <% if (!jobs || jobs.length === 0) { %>
+  <p class="no-data">No career requests found</p>
+  <% } else { %>
+  <div class="table-wrapper">
+    <table class="career-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Job Title</th>
+          <th>Location</th>
+          <th>Job Type</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% jobs.forEach((job, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= job.job_title %></td>
+          <td><%= job.location %></td>
+          <td><span class="job-type"><%= job.job_type %></span></td>
+          <td>
+            <span class="job_description"><%= job.job_description %></span>
+          </td>
+          <td class="action-col">
+            <a href="/admin/career/edit/<%= job.id %>" class="btn-edit">
+              <i class="fa fa-pen"></i>
+            </a>
+            <form
+              action="/admin/career/delete/<%= job.id %>"
+              method="POST"
+              class="delete-form"
+            >
+              <button type="button" class="btn-delete" data-id="<%= job.id %>">
+                <i class="fa fa-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+
+  <a href="/admin/dashboard" class="btn-home">
+    <i class="fa fa-arrow-left"></i> Back to Dashboard
+  </a>
+</div>
+
+<!-- ===================== Delete Modal Top-Right ===================== -->
+<div id="deleteModal">
+  <div class="modal-content">
+   <p>Are you sure?</p>
+
+    <button class="btn btn-confirm">Delete</button>
+    <button class="btn btn-cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- ===================== JS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+  // Modal logic
+  const deleteModal = document.getElementById("deleteModal");
+  const confirmBtn = deleteModal.querySelector(".btn-confirm");
+  const cancelBtn = deleteModal.querySelector(".btn-cancel");
+  let currentForm = null;
+
+  // Open modal
+  document.querySelectorAll(".btn-delete").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      currentForm = this.closest("form");
+      deleteModal.style.display = "block";
+    });
+  });
+
+  // Cancel button
+  cancelBtn.addEventListener("click", () => {
+    deleteModal.style.display = "none";
+    currentForm = null;
+  });
+
+  // Confirm button
+  confirmBtn.addEventListener("click", () => {
+    if (currentForm) {
+      currentForm.submit();
+      deleteModal.style.display = "none";
+
+      // Toastify success
+      Toastify({
+        text: "✅ Job deleted successfully!",
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+        close: true,
+        stopOnFocus: true,
+        style: {
+          background: "#16a34a",
+          borderRadius: "10px",
+          fontWeight: "600",
+          color: "#fff",
+          padding: "12px 20px",
+          position: "relative",
+          overflow: "hidden",
+        },
+      }).showToast();
+    }
+  });
+</script>

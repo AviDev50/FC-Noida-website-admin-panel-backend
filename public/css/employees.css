@@ -1,0 +1,558 @@
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page-wrapper {
+  margin-left: 250px;
+  padding: 30px;
+  min-height: 100vh;
+  background: #f9fafb;
+  font-family: "Segoe UI", sans-serif;
+  width: calc(100% - 250px);
+  box-sizing: border-box;
+  color: #1f2937;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  font-size: 1.9rem;
+  color: #111827;
+  margin: 0;
+  margin-left: 30px;
+}
+
+.header p {
+  color: #6b7280;
+  margin-top: 6px;
+  font-size: 0.95rem;
+  margin-left: 30px;
+}
+
+/* ===============================
+   ADD BUTTON
+================================ */
+.btn-add {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  color: #ffffff;
+  padding: 11px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37,99,235,0.3);
+}
+
+/* ===============================
+   TABLE WRAPPER
+================================ */
+.table-wrapper {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+}
+
+/* ===============================
+   EMPLOYEE TABLE
+================================ */
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ---------- TABLE HEADER ---------- */
+.employee-table thead {
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.employee-table th {
+  padding: 14px 16px;
+  color: #111827;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 700;
+}
+
+/* ---------- TABLE BODY ---------- */
+.employee-table td {
+  padding: 14px 16px;
+  color: #1f2937;
+  font-size: 0.9rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.employee-table tbody tr {
+  height: 80px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.employee-table tbody tr:hover {
+  background: #f3f4f6;
+}
+
+/* ===============================
+   SEQUENCE COLUMN
+================================ */
+.employee-table th:first-child,
+.employee-table td:first-child {
+  width: 60px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* ===============================
+   PROFILE IMAGE
+================================ */
+.table-profile-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #3b82f6;
+  display: block;
+  margin: auto;
+}
+
+/* ===============================
+   ROLE BADGE
+================================ */
+.role-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid #3b82f6;
+  color: #2563eb;
+  text-transform: uppercase;
+  background: #e0f2fe;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */ 
+.btn-edit {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ecfdf5;
+  padding: 7px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-right: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+  transform: scale(1.05);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #ffffff;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  transform: scale(1.05);
+}
+
+/* ===============================
+   NO DATA
+================================ */
+.no-data {
+  text-align: center;
+  padding: 50px;
+  color: #6b7280;
+  font-size: 1rem;
+  background: #f3f4f6;
+  border-radius: 12px;
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #111827;
+  background: #e5e7eb;
+  transition: 0.25s;
+  margin-left: 50px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .employee-table th,
+  .employee-table td {
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+
+  .table-profile-img {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* ===============================
+   CONTENT CARD
+================================ */
+.content {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* PAGE HEADER */
+.page-header h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  color: #111827;
+}
+
+.page-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* CARD */
+.card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* FORM */
+#employeeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#employeeForm label {
+  font-weight: 600;
+  color: #374151;
+}
+
+#employeeForm input[type="text"],
+#employeeForm input[type="file"] {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #f9fafb;
+}
+
+#employeeForm input[type="text"]:focus,
+#employeeForm input[type="file"]:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+  background: #ffffff;
+}
+
+/* FORM BUTTON */
+#employeeForm button {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#employeeForm button:hover {
+  background: #1d4ed8;
+}
+
+/* HOME LINK */
+.btn-home {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  color: #2563eb;
+  transition: all 0.2s ease;
+}
+
+.btn-home:hover {
+  text-decoration: underline;
+  color: #1d4ed8;
+}
+
+/* ===============================
+   Add Employee Page
+================================ */
+
+
+.employee-page {
+  margin-left: 300px; /* sidebar space */
+  padding: 40px 48px;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* ===== HEADER ===== */
+.employee-header {
+  margin-bottom: 28px;
+}
+
+.employee-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.employee-header p {
+  font-size: 15px;
+  color: #64748b;
+}
+
+/* ===== CARD ===== */
+.employee-card {
+  background: #ffffff;
+  padding: 28px 32px;
+  max-width: 520px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* ===== FORM ===== */
+.employee-form label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.employee-form input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5f5;
+  background: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.employee-form input[type="file"] {
+  padding: 10px;
+  background: #f8fafc;
+}
+
+.employee-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ===== BUTTON ===== */
+.employee-form button {
+  margin-top: 22px;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.employee-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+/* ===== BACK LINK ===== */
+.employee-back {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.employee-back:hover {
+  text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .employee-page {
+    margin-left: 0;
+    padding: 24px;
+  }
+
+  .employee-card {
+    max-width: 100%;
+    padding: 24px;
+  }
+}
+
+/* ===============================
+   BACK BUTTON – WHITE MODERN
+================================ */
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #111827;
+  background: #e5e7eb;
+  transition: 0.25s;
+  margin-left: 50px;
+}
+
+.btn-home:hover {
+  background: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.btn-home i {
+  font-size: 15px;
+}
+
+.btn-home:hover {
+  transform: translateX(-4px);
+}
+
+
+
+/* ================= DELETE MODAL ================= */
+.delete-modal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 360px;       /* slightly bigger */
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 9999;
+  font-family: "Segoe UI", sans-serif;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px 20px;
+  animation: slideDown 0.3s ease;
+  gap: 12px;
+}
+
+.delete-modal p {
+  font-size: 15px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Buttons */
+.delete-modal .btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.delete-modal .btn-confirm {
+  background: #ef4444;
+  color: #fff;
+}
+
+.delete-modal .btn-confirm:hover {
+  background: #dc2626;
+}
+
+.delete-modal .btn-cancel {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.delete-modal .btn-cancel:hover {
+  background: #d1d5db;
+}
+
+/* Slide down animation */
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

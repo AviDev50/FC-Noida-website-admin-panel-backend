@@ -1,0 +1,132 @@
+/* ===============================
+   PAGE LAYOUT (WITH SIDEBAR)
+================================ */
+.container {
+  margin-left: 300px;            /* sidebar space */
+  padding: 32px;
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+/* ===============================
+   PAGE TITLE
+================================ */
+.container h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 28px;
+}
+
+/* ===============================
+   FORM CARD
+================================ */
+#careerForm {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 900px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* ===============================
+   FORM LABELS
+================================ */
+#careerForm label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* ===============================
+   INPUTS / SELECT / TEXTAREA
+================================ */
+#careerForm input,
+#careerForm select,
+#careerForm textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: #ffffff;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
+}
+
+#careerForm textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+#careerForm input:focus,
+#careerForm select:focus,
+#careerForm textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ===============================
+   UPDATE BUTTON
+================================ */
+#updateCareerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #ffffff;
+  padding: 12px 26px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#updateCareerBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  transition: color 0.2s ease;
+}
+
+.btn-home:hover {
+  color: #111827;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1024px) {
+  .container {
+    margin-left: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  #careerForm {
+    padding: 22px;
+  }
+}

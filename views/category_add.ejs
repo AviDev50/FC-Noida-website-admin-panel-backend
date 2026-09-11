@@ -1,0 +1,79 @@
+<%- include('partials/sidebar') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="stylesheet" href="/css/addCategoryForm.css" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+</head>
+<body>
+
+<div class="content">
+
+  <div class="page-header">
+    <h2>Add New Category</h2>
+    <p>Add and manage categories to organize your website content efficiently.</p>
+  </div>
+
+  <div class="card">
+    <form id="categoryForm" action="/admin/category/add" method="POST">
+      <label>Category Name</label>
+      <input
+        type="text"
+        name="category_name"
+        placeholder="Enter category name"
+        required
+      />
+
+      <button type="submit">Save Category</button>
+    </form>
+  </div>
+
+  <a href="/admin/category" class="btn-home">
+    ← Back to Category List
+  </a>
+
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+  const form = document.getElementById("categoryForm");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); 
+
+    Toastify({
+      text: "Category added successfully",
+      duration: 2000,
+      gravity: "top",
+      position: "right",
+      close: true,
+      stopOnFocus: true,
+      style: {
+        background: "#16a34a"   
+      }
+    }).showToast();
+
+  
+    setTimeout(() => {
+      form.submit();
+    }, 2000);
+  });
+</script>
+
+
+
+
+
+
+</body>
+</html>

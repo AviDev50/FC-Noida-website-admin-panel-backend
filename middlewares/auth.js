@@ -1,20 +1,19 @@
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config/env.js";
 
 const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const [scheme, token] = (req.headers.authorization || "").split(" ");
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "No token provided" });
+  if (scheme !== "Bearer" || !token) {
+    return res.status(401).json({ success: false, message: "Access denied: Bearer token missing" });
   }
 
-  const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, phone }
+    req.user = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    const message = error.name === "TokenExpiredError" ? "Token expired" : "Invalid token";
+    return res.status(401).json({ success: false, message });
   }
 };
 

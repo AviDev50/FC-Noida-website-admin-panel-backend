@@ -1,51 +1,54 @@
 import db from "../../config/db.js";
 
-// create
+// Create Category (POST)
+export const createCategory = async (req, res) => {
+  try {
+    const { category_name } = req.body;
 
-export const createCategory = (req, res) => {
-  const { category_name } = req.body;
-  const sql = "INSERT INTO blog_category (category_name) VALUES (?)";
-  db.query(sql, [category_name], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+    if (!category_name) {
+      return res.status(400).send("Category name is required.");
     }
-    res.redirect("/admin/category");
-  });
+
+    const sql = "INSERT INTO blog_category (category_name) VALUES (?)";
+    await db.query(sql, [category_name]);
+
+    return res.redirect("/admin/category");
+  } catch (err) {
+    console.error("Create Category Error:", err);
+    return res.status(500).json({ error: err.message });
+  }
 };
 
-// delete
+// Delete Category (GET / POST)
+export const deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sql = "DELETE FROM blog_category WHERE category_id = ?";
 
-export const deleteCategory = (req, res) => {
-  const { id } = req.params;
-  const sql = "DELETE FROM blog_category WHERE category_id = ?";
-
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
+    const [result] = await db.query(sql, [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
         message: "Category not found",
       });
     }
-    res.redirect("/admin/category");
-  });
+
+    return res.redirect("/admin/category");
+  } catch (err) {
+    console.error("Delete Category Error:", err);
+    return res.status(500).json({ error: err.message });
+  }
 };
 
-//  get category   by id
+// Get Category By ID (GET)
+export const getCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sql = "SELECT * FROM blog_category WHERE category_id = ?";
 
-export const getCategoryById = (req, res) => {
-  const { id } = req.params;
+    const [rows] = await db.query(sql, [id]);
 
-  const sql = "SELECT * FROM blog_category WHERE category_id = ?";
-
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      return res.status(500).send("Database Error: " + err.message);
-    }
-
-    if (result.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({
         message: "Category not found",
       });
@@ -53,90 +56,33 @@ export const getCategoryById = (req, res) => {
 
     return res.status(200).json({
       message: "Category fetched successfully",
-      result: result[0],
+      result: rows[0],
     });
-  });
+  } catch (err) {
+    console.error("Get Category Error:", err);
+    return res.status(500).send("Database Error: " + err.message);
+  }
 };
 
-// update query
-
-// export const updateCategory = (req, res) => {
-//   const { category_name } = req.body;
-//   const { id } = req.params;
-
-//   if (!id || !category_name) {
-//     return res.status(400).json({
-//       message: "Category ID and Category Name are required",
-//     });
-//   }
-
-//   const sql =
-//     "UPDATE blog_category SET category_name = ? WHERE category_id = ?";
-
-//   db.query(sql, [category_name, id], (err, result) => {
-//     if (err) {
-//       return res.status(500).json({ error: err.message });
-//     }
-
-//     if (result.affectedRows === 0) {
-//       return res.status(404).json({
-//         message: "Category not found",
-//       });
-//     }
-
-//     // ✅ EJS admin panel ke liye redirect best
-//     return res.redirect("/admin/category");
-//   });
-// };
-
-
-// if id  give then give particular data otherwise show all record
-
-// export const optionalCategory = (req, res) => {
-//   const { id } = req.query;
-//   let sql = "SELECT * FROM blog_category";
-//   let values = [];
-
-//   if (id) {
-//     sql += " WHERE category_id = ?";
-//     values.push(id);
-//   }
-
-//   db.query(sql, values, (err, result) => {
-//     if (err) {
-//       return res.status(500).json({
-//         message: "Database error",
-//         error: err.message,
-//       });
-//     }
-
-//     res.status(200).json({
-//       message: "Category fetched successfully",
-//       result,
-//     });
-//   });
-// };
-
-// show categoryForm
+// Show Add Category Form (UI GET)
 export const showAddCategoryForm = (req, res) => {
   res.render("category_add", {
     title: "Add New Category",
   });
 };
 
-// show category
+// Show Category List (UI GET)
+export const getCategoryList = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM blog_category ORDER BY category_id DESC";
+    const [category] = await db.query(sql);
 
-export const getCategoryList = (req, res) => {
-  const sql = "SELECT * FROM blog_category";
-
-  db.query(sql, (err, category) => {
-    if (err) {
-      return res.status(500).send("Database Error: " + err.message);
-    }
-
-    res.render("category", {
+    return res.render("category", {
       title: "Category List",
       category,
     });
-  });
+  } catch (err) {
+    console.error("Get Category List Error:", err);
+    return res.status(500).send("Database Error: " + err.message);
+  }
 };

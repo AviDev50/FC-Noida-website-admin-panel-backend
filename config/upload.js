@@ -1,22 +1,43 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 
-const uploadDir = "public/uploads/";
+const makeUpload = (dir, allowed, maxMB) => {
+  fs.mkdirSync(dir, { recursive: true });
 
-// Ensure uploads folder exists
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+  return multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => cb(null, dir),
+      filename: (req, file, cb) =>
+        cb(null, `${crypto.randomUUID()}${path.extname(file.originalname).toLowerCase()}`),
+    }),
+    limits: { fileSize: maxMB * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      const ok = allowed[file.mimetype]?.includes(ext);
+      if (ok) return cb(null, true);
+      const err = new Error("Invalid file type");
+      err.status = 400;
+      cb(err);
+    },
+  });
+};
 
-// Storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
+// Public (served via /uploads)
+export const uploadImage = makeUpload(
+  "public/uploads",
+  { "image/jpeg": [".jpg", ".jpeg"], "image/png": [".png"], "image/webp": [".webp"] },
+  2
+);
+
+// Private (served only via admin route)
+export const uploadResume = makeUpload(
+  "private/resumes",
+  {
+    "application/pdf": [".pdf"],
+    "application/msword": [".doc"],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-export const upload = multer({ storage });
+  5
+);

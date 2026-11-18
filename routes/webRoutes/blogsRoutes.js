@@ -1,33 +1,35 @@
 import express from "express";
-import { showAddBlogForm, createBlog, deleteBlogs, getBlogsByCategory, updateBlogs,getBlogsWithCategory, showEditBlogForm, matkaapi } from "../../controllers/webController/blogsController.js";
+import {
+//   getBlogs,
+  getBlogById,
+  createBlog,
+  updateBlogs,
+  deleteBlogs,
+//   matkaapi,
+} from "../../controllers/jsonapi/blogs.controller.js"; // Sahi controller path verify karein
 import { upload } from "../../config/upload.js";
 import authentication from "../../middlewares/authentication.js";
-import multer from "multer";
+
 const router = express.Router();
 
-router.get("/blogs", authentication,getBlogsWithCategory);
+// ================= BLOGS REST API =================
 
-router.get("/matkaapi",matkaapi);
+// 1. Get all blogs (supports ?category_id= & ?status= query params)
+// router.get("/blogs", authentication, getBlogs);
 
+// 2. Get single blog details by ID (Edit form pre-fill karne ke liye)
+router.get("/blogs/:id", authentication, getBlogById);
 
-// Show Add Blog Form
-router.get("/blogs/add", showAddBlogForm);
+// 3. Create new blog (Multipart file upload)
+router.post("/blogs/add", authentication, upload.single("image"), createBlog);
 
-// Create Blog
-router.post("/blogs/add", upload.single("image"), createBlog); 
+// 4. Update blog (Multipart file upload)
+router.post("/blogs/edit/:id", authentication, upload.single("image"), updateBlogs);
 
-//delete 
-router.post("/blogs/delete/:id",deleteBlogs)
+// 5. Delete blog
+router.post("/blogs/delete/:id", authentication, deleteBlogs);
 
-//category_id ke behalf pr blog get 
-
-router.get("/getBlogByCategoryId", getBlogsByCategory);
-
-//  Get blog Edit form
-router.get("/blogs/edit/:id", showEditBlogForm);
-
-// update blog
-router.post("/blogs/edit/:id", upload.single('image'), updateBlogs);
-
+// ================= THIRD PARTY / UTILITY =================
+// router.get("/matkaapi", matkaapi);
 
 export default router;

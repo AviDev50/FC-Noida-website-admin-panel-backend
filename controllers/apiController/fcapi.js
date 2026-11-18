@@ -1,157 +1,160 @@
 import db from "../../config/db.js";
 
-// Get category
+// ================= GET ALL CATEGORIES =================
+export const getCotegoriesForApi = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM blog_category ORDER BY category_id DESC";
+    const [result] = await db.query(sql);
 
-export const getCotegoriesForApi = (req, res) => {
-  const sql = "SELECT * FROM blog_category";
-
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(500).send("Database Error: " + err.message);
-    }
-
-    return res.status(202).json({
-      message: "category get successfull",
+    return res.status(200).json({
+      success: true,
+      message: "Categories fetched successfully.",
       result,
     });
-  });
+  } catch (err) {
+    console.error("Get Categories API Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database Error: " + err.message,
+    });
+  }
 };
 
-// get CareerJobs
+// ================= GET CAREER JOBS =================
+export const getCareerJobs = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM career_jobs ORDER BY id DESC";
+    const [jobs] = await db.query(sql);
 
-export const getCareerJobs = (req, res) => {
-  const sql = "SELECT * FROM career_jobs ORDER BY id DESC";
-
-  db.query(sql, (err, jobs) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Database Error",
-        error: err,
-      });
-    }
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Career jobs fetched successfully",
+      message: "Career jobs fetched successfully.",
       data: jobs,
     });
-  });
+  } catch (err) {
+    console.error("Get Career Jobs API Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database Error: " + err.message,
+    });
+  }
 };
 
+// ================= GET ALL EMPLOYEES =================
+export const getEmployees = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM employees ORDER BY created_at DESC";
+    const [result] = await db.query(sql);
 
-// GET all employees
-export const getEmployees = (req, res) => {
-  const sql = "SELECT * FROM employees ORDER BY created_at DESC";
-
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Database error while fetching employees",
-        error: err.message,
-      });
-    }
-
-    // IMAGE NAME → FULL URL
-    const employeesWithImageUrl = result.map(emp => ({
+    // Append full host URL to image filenames
+    const employeesWithImageUrl = result.map((emp) => ({
       ...emp,
       image: emp.image
         ? `${req.protocol}://${req.get("host")}/public/uploads/${emp.image}`
-        : null
+        : null,
     }));
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Employees fetched successfully",
+      message: "Employees fetched successfully.",
       total: employeesWithImageUrl.length,
       data: employeesWithImageUrl,
     });
-  });
+  } catch (err) {
+    console.error("Get Employees API Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database error while fetching employees: " + err.message,
+    });
+  }
 };
 
+// ================= GET BLOGS BY CATEGORY / ALL =================
+export const getBlogsByCategory = async (req, res) => {
+  try {
+    const categoryId = req.query.category_id;
 
-// Get blogs by category_id
-export const getBlogsByCategory = (req, res) => {
-  const categoryId = req.query.category_id;
+    let sql = `
+      SELECT 
+        blogs.*,
+        blog_category.category_name,
+        blog_category.category_id
+      FROM blogs
+      LEFT JOIN blog_category
+        ON blogs.category_id = blog_category.category_id
+    `;
+    const params = [];
 
-let sql = `
-  SELECT 
-    blogs.*,
-    blog_category.category_name,
-    blog_category.category_id
-
-  FROM blogs
-  LEFT JOIN blog_category
-    ON blogs.category_id = blog_category.category_id
-`;
-  const params = [];
-
-  // If categoryId is provided, filter by category
-  if (categoryId) {
-    sql += " WHERE blogs.category_id = ?";
-    params.push(categoryId);
-  }
-
-  sql += " ORDER BY blogs.created_at DESC";
-
-  db.query(sql, params, (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
-      });
+    if (categoryId) {
+      sql += " WHERE blogs.category_id = ?";
+      params.push(categoryId);
     }
+
+    sql += " ORDER BY blogs.created_at DESC";
+
+    const [result] = await db.query(sql, params);
 
     if (result.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No blogs found",
+        message: "No blogs found.",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Blogs fetched successfully",
+      message: "Blogs fetched successfully.",
       total: result.length,
       data: result,
     });
-  }); 
-}; 
-
-
-
-/* ================= SUBMIT JOB REQUEST================= */
-export const submitJobRequest = (req, res) => {
-  const { career_job_id,full_name, email, phone } = req.body;
-
-  if (!full_name || !email || !phone || !req.file) {
-    return res.status(400).json({ message: "All fields required" });
+  } catch (err) {
+    console.error("Get Blogs by Category Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error: " + err.message,
+    });
   }
+};
 
-  const resume = req.file.filename;
+// ================= SUBMIT JOB REQUEST =================
+export const submitJobRequest = async (req, res) => {
+  try {
+    const { career_job_id, full_name, email, phone } = req.body;
 
-  const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${resume}`;
-
-  const sql =
-    "INSERT INTO job_requests (career_job_id,full_name, email, phone, resume) VALUES (?, ?, ?, ?,?)";
-
-  db.query(sql, [career_job_id,full_name, email, phone, resume], (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Database Error",
+    if (!full_name || !email || !phone || !req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Full name, email, phone, and resume file are required.",
       });
     }
 
-    res.status(201).json({
+    const resume = req.file.filename;
+    const resumeUrl = `${req.protocol}://${req.get("host")}/uploads/${resume}`;
+
+    const sql = `
+      INSERT INTO job_requests (career_job_id, full_name, email, phone, resume) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    const [result] = await db.query(sql, [
+      career_job_id || null,
+      full_name,
+      email,
+      phone,
+      resume,
+    ]);
+
+    return res.status(201).json({
       success: true,
-      message: "Job request submitted",
+      message: "Job request submitted successfully.",
       requestId: result.insertId,
-      job_id:career_job_id,
-      resume: resumeUrl
+      job_id: career_job_id || null,
+      resume: resumeUrl,
     });
-  });
+  } catch (err) {
+    console.error("Submit Job Request Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database Error: " + err.message,
+    });
+  }
 };
-
-

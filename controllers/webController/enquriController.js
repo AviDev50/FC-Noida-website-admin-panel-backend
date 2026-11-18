@@ -1,89 +1,65 @@
 import db from "../../config/db.js";
 
-// POST Enquiry
-export const createEnquiry = (req, res) => {
-  const { name, email,phone, subject, message } = req.body;
+// POST: Create Enquiry
+export const createEnquiry = async (req, res) => {
+  try {
+    const { name, email, phone, subject, message } = req.body;
 
-  if (!name || !email  ||!phone  ) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required"
-    });
-  }
-
-  const sql =
-    "INSERT INTO enquiries (name, email,phone, subject, message) VALUES (?, ?,?, ?,?)";
-  db.query(
-    sql,
-    [name, email, phone, subject, message],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Database error", error: err });
-      }
-
-      return res.status(200).json({
-        message: "Enquiry Added Successfully",
-        result,
-        success: true,
+    if (!name || !email || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and phone are required fields."
       });
     }
-  );
-};
 
-// GET Enquiries (Dashboard)
-export const getEnquiries = (req, res) => {
-  const sql = "SELECT * FROM enquiries ORDER BY id DESC";
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Database error: " + err.message);
-    }
+    const sql = "INSERT INTO enquiries (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)";
+    const [result] = await db.query(sql, [name, email, phone, subject || null, message || null]);
 
-    res.render("enquiries", {
-      title: "Enquiries Dashboard",
-      enquiries: result,
+    return res.status(201).json({
+      success: true,
+      message: "Enquiry submitted successfully.",
+      enquiryId: result.insertId
     });
-  });
+  } catch (err) {
+    console.error("Create Enquiry Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database error",
+      error: err.message
+    });
+  }
 };
 
+// GET: Enquiries List (Dashboard / View)
+export const getEnquiries = async (req, res) => {
+  try {
+    const sql = "SELECT * FROM enquiries ORDER BY id DESC";
+    const [rows] = await db.query(sql);
 
-// delete 
+    return res.render("enquiries", {
+      title: "Enquiries Dashboard",
+      enquiries: rows,
+    });
+  } catch (err) {
+    console.error("Get Enquiries Error:", err);
+    return res.status(500).send("Database error: " + err.message);
+  }
+};
 
-export const deleteEnquiries = (req, res) => {
-  const { id } = req.params;
+// GET / DELETE: Delete Enquiry
+export const deleteEnquiries = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sql = "DELETE FROM enquiries WHERE id = ?";
+    const [result] = await db.query(sql, [id]);
 
-  const sql = "DELETE FROM enquiries WHERE id = ?";
-
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Database error: " + err.message);
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Enquiry not found");
     }
 
-   
-    res.redirect("/admin/enquiries");
-  });
+    return res.redirect("/admin/enquiries");
+  } catch (err) {
+    console.error("Delete Enquiry Error:", err);
+    return res.status(500).send("Database error: " + err.message);
+  }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

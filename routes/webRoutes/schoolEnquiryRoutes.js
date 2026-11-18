@@ -1,10 +1,6 @@
 import express from "express";
 const router = express.Router();
 
-
-
-
-
 import {
   createUser,
   getUsers,
@@ -19,8 +15,6 @@ router.get("/all", getUsers);
 
 //  DELETE
 router.delete("/delete/:id", deleteEnquiry);
-
-
 
 // For  Ui
 router.get("/school-enquiry", (req, res) => {

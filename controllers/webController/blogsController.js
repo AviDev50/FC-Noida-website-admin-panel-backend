@@ -1,328 +1,323 @@
 import db from "../../config/db.js";
 import slugify from "slugify";
+import fs from "fs";
+import path from "path";
 
-// Create Blog
-export const createBlog = (req, res) => {
-  const {
-    category_id,
-    title,
-    short_description,
-    content,
-    status,
+// ================= CREATE BLOG =================
+export const createBlog = async (req, res) => {
+  try {
+    const {
+      title,
+      category_id,
+      short_description,
+      content,
+      status,
+      meta_title,
+      meta_description,
+      author_name,
+      reading_time,
+    } = req.body;
 
-    meta_title,
-    meta_description,
+    if (!title || title.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Blog title is required.",
+      });
+    }
 
-    image_alt,
+    const image = req.file ? req.file.filename : null;
+    
+    // 1. Slug auto-generate aur unique banana (Duplicate Key error se bachne ke liye)
+    let rawSlug = req.body.slug && req.body.slug.trim() !== ""
+      ? req.body.slug
+      : title;
+      
+    let baseSlug = slugify(rawSlug, { lower: true, strict: true });
+    let finalSlug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
 
-    author_name,
+    // 2. Foreign Key Safe Parsing (Empty string aane par NULL karein)
+    const validCategoryId = category_id && !isNaN(parseInt(category_id)) 
+      ? parseInt(category_id) 
+      : null;
 
-    reading_time,
+    const [result] = await db.query(
+      `INSERT INTO blogs 
+      (title, category_id, slug, short_description, content, status, image, meta_title, meta_description, author_name, reading_time) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        title.trim(),
+        validCategoryId,
+        finalSlug,
+        short_description || null,
+        content || null,
+        status || "draft",
+        image,
+        meta_title || null,
+        meta_description || null,
+        author_name || "Founder Code Team",
+        reading_time || 1,
+      ]
+    );
 
-    published_at,
+    return res.status(201).json({
+      success: true,
+      message: "Blog created successfully.",
+      blogId: result.insertId,
+    });
+  } catch (error) {
+    console.error("Create Blog Error Details:", error);
 
-    is_featured,
-  } = req.body;
+    // Specific Database Error Handling
+    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+      return res.status(400).json({
+        success: false,
+        message: "Selected Category does not exist. Please choose a valid category.",
+      });
+    }
 
-  const image = req.file ? req.file.filename : null;
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({
+        success: false,
+        message: "A blog with this slug already exists. Please change the title.",
+      });
+    }
 
-  let { slug } = req.body;
-
-  // Auto-generate slug
-  if (!slug || slug.trim() === "") {
-    slug = slugify(title, {
-      lower: true,
-      strict: true,
+    return res.status(500).json({
+      success: false,
+      message: "Database error: " + error.message,
     });
   }
+};
+// ================= GET ALL BLOGS (WITH CATEGORY NAME & FILTER) =================
+export const getBlogs = async (req, res) => {
+  try {
+    const { category_id, status } = req.query;
 
-  const sql = `
-    INSERT INTO blogs (
-      category_id,
+    let sql = `
+      SELECT 
+        blogs.id,
+        blogs.title,
+        blogs.slug,
+        blogs.status,
+        blogs.image,
+        blogs.created_at,
+        blogs.short_description,
+        blogs.content,
+        blogs.category_id,
+        blog_category.category_name
+      FROM blogs
+      LEFT JOIN blog_category 
+        ON blogs.category_id = blog_category.category_id
+      WHERE 1=1
+    `;
+
+    const params = [];
+
+    if (category_id) {
+      sql += " AND blogs.category_id = ?";
+      params.push(category_id);
+    }
+
+    if (status) {
+      sql += " AND blogs.status = ?";
+      params.push(status);
+    }
+
+    sql += " ORDER BY blogs.id DESC";
+
+    const [blogs] = await db.query(sql, params);
+
+    const baseUrl = `${req.protocol}://${req.get("host")}/public/uploads/`;
+    const formattedBlogs = blogs.map((b) => ({
+      ...b,
+      imageUrl: b.image ? `${baseUrl}${b.image}` : null,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      total: formattedBlogs.length,
+      data: formattedBlogs,
+    });
+  } catch (err) {
+    console.error("Get Blogs Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch blogs: " + err.message,
+    });
+  }
+};
+
+// ================= GET SINGLE BLOG BY ID =================
+export const getBlogById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const sql = `
+      SELECT 
+        b.*, 
+        c.category_name 
+      FROM blogs b 
+      LEFT JOIN blog_category c ON b.category_id = c.category_id 
+      WHERE b.id = ?
+    `;
+
+    const [blogs] = await db.query(sql, [id]);
+
+    if (blogs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    const blog = blogs[0];
+    blog.imageUrl = blog.image
+      ? `${req.protocol}://${req.get("host")}/public/uploads/${blog.image}`
+      : null;
+
+    return res.status(200).json({
+      success: true,
+      data: blog,
+    });
+  } catch (err) {
+    console.error("Get Blog By ID Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database error: " + err.message,
+    });
+  }
+};
+
+// ================= UPDATE BLOG =================
+export const updateBlogs = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
       title,
       slug,
       short_description,
       content,
       status,
-      image,
-
+      category_id,
       meta_title,
       meta_description,
-
       image_alt,
-
       author_name,
-
       reading_time,
+    } = req.body;
 
-      published_at,
-
-      is_featured
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  const values = [
-    category_id || null,
-    title,
-    slug,
-    short_description,
-    content,
-    status || "draft",
-    image,
-
-    meta_title || null,
-    meta_description || null,
-
-    image_alt || null,
-
-    author_name || "Founder Code Team",
-
-    reading_time || 1,
-
-    published_at || null,
-
-    is_featured || 0,
-  ];
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Create Blog Error:", err);
-
-      return res.status(500).json({
-        success: false,
-        message: err.message,
-      });
-    }
-
-    return res.redirect("/admin/blogs");
-  });
-};
-
-// Get all blogs
-export const getBlogs = (req, res) => {
-  const sql = "SELECT * FROM blogs";
-  db.query(sql, (err, result) => {
-    if (err) return res.status(500).send("Database Error: " + err.message);
-    res.render("blogs", { title: "All Blogs", blogs: result});
-  });
-  console.log(result)
-};
-
-//delete blog
-export const deleteBlogs = (req, res) => {
-  const { id } = req.params;
-
-  const sql = "DELETE FROM blogs WHERE id = ?";
-
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        message: "Database error",
-        error: err,
-      });
-    }
-
-    if (result.affectedRows === 0) {
+    const [existing] = await db.query("SELECT * FROM blogs WHERE id = ?", [id]);
+    if (existing.length === 0) {
       return res.status(404).json({
+        success: false,
+        message: "Blog not found to update",
+      });
+    }
+
+    const finalSlug =
+      slug && slug.trim() !== ""
+        ? slug
+        : slugify(title || existing[0].title, { lower: true, strict: true });
+
+    let sql = `
+      UPDATE blogs 
+      SET 
+        title = COALESCE(?, title),
+        slug = COALESCE(?, slug),
+        short_description = COALESCE(?, short_description),
+        content = COALESCE(?, content),
+        status = COALESCE(?, status),
+        category_id = COALESCE(?, category_id),
+        meta_title = COALESCE(?, meta_title),
+        meta_description = COALESCE(?, meta_description),
+        image_alt = COALESCE(?, image_alt),
+        author_name = COALESCE(?, author_name),
+        reading_time = COALESCE(?, reading_time)
+    `;
+
+    const params = [
+      title,
+      finalSlug,
+      short_description,
+      content,
+      status,
+      category_id || null,
+      meta_title,
+      meta_description,
+      image_alt,
+      author_name,
+      reading_time,
+    ];
+
+    if (req.file) {
+      sql += ", image = ?";
+      params.push(req.file.filename);
+
+      if (existing[0].image) {
+        const oldFilePath = path.join(process.cwd(), "public", "uploads", existing[0].image);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+    }
+
+    sql += " WHERE id = ?";
+    params.push(id);
+
+    await db.query(sql, params);
+
+    return res.status(200).json({
+      success: true,
+      message: "Blog updated successfully",
+    });
+  } catch (err) {
+    console.error("Update Blog Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while updating the blog: " + err.message,
+    });
+  }
+};
+
+// ================= DELETE BLOG =================
+export const deleteBlogs = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [rows] = await db.query("SELECT image FROM blogs WHERE id = ?", [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
         message: "Blog not found!",
       });
     }
 
-    // return res.status(200).json({
-    //   message: "Blog deleted successfully",
-
-    // });
-    res.redirect("/admin/blogs");
-  });
-};
-
-//Get blogs by category_id
-export const getBlogsByCategory = (req, res) => {
-  const categoryId = req.query.category_id;
-
-  let sql = `
-    SELECT 
-      blogs.id,
-      blogs.title,
-      blogs.slug,
-      blogs.status,
-      blogs.short_description,
-      blogs.content,
-      blogs.image,
-      blog_category.category_name,
-      blog_category.category_id
-    FROM blogs
-    LEFT JOIN blog_category 
-      ON blogs.category_id = blog_category.category_id
-  `;
-
-  const params = [];
-
-  // If categoryId is provided, filter by category
-  if (categoryId) {
-    sql += " WHERE blogs.category_id = ?";
-    params.push(categoryId);
-  }
-
-  sql += " ORDER BY blogs.created_at DESC";
-
-  db.query(sql, params, (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    if (result.length === 0) {
-      return res.status(404).json({ message: "No blogs found" });
-    }
-
-    res.json(result);
-  });
-};
-
-// dropdown ke liye
-
-export function showAddBlogForm(req, res) {
-  const sql = "SELECT * FROM blog_category";
-
-  db.query(sql, (err, categories) => {
-    if (err) {
-      return res.status(500).send("Database Error: " + err.message);
-    }
-
-    res.render("addBlogs", {
-      title: "Add New Blog",
-      categories, // dropdown ke liye
-    });
-  });
-}
-
-// ===============================
-// BLOG LIST WITH CATEGORY NAME
-// ===============================
-export const getBlogsWithCategory = (req, res) => {
-  const sql = `
-    SELECT 
-      blogs.id,
-      blogs.title,
-      blogs.slug,
-      blogs.status,
-      blogs.image,
-      blogs.created_at,
-      blogs.short_description,
-      blogs.content,
-      blogs.category_id,
-      blog_category.category_name
-
-    FROM blogs
-    LEFT JOIN blog_category 
-      ON blogs.category_id = blog_category.category_id
-    ORDER BY blogs.id DESC
-  `;
-
-  db.query(sql, (err, result) => {
-    if (err) return res.status(500).send(err.message);
-
-    res.render("blogs", {
-      blogs: result,
-    });
-  });
-};
-
-
-
-
-
-// show edit blog form
-
-export const showEditBlogForm = (req, res) => {
-  const blogId = req.params.id;
-
-  //Blog data (with selected category)
-  const blogSql = `SELECT blogs.*FROM blogs WHERE blogs.id = ?`;
-
-  //All categories (for dropdown)
-  const categorySql = `
-    SELECT * FROM blog_category
-  `;
-
-  db.query(blogSql, [blogId], (err, blogResult) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send("Database error (blog)");
-    }
-
-    if (!blogResult.length) {
-      return res.status(404).send("Blog not found");
-    }
-
-    db.query(categorySql, (err, categoryResult) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send("Database error (categories)");
+    if (rows[0].image) {
+      const filePath = path.join(process.cwd(), "public", "uploads", rows[0].image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
       }
-      res.render("editBlogForm", {
-        blog: blogResult[0],
-        categories: categoryResult
-      });
-    });
-  });
-};
-
-
-
-
-// Update Blog
-export const updateBlogs = (req, res) => {
-  const { id } = req.params;
-
-  const { title, slug, short_description, content, status, category_id } = req.body;
-
-
-  const image = req.file ? req.file.filename : null;
-
-  // Auto-generate slug if empty
-  const finalSlug = slug && slug.trim() !== '' ? slug : slugify(title, { lower: true, strict: true });
-
-
-  let sql = `
-    UPDATE blogs 
-    SET title = ?, slug = ?, short_description = ?, content = ?, status = ?, category_id = ?
-  `;
-  const params = [title, finalSlug, short_description, content, status, category_id];
-
-  // Only update image if a new one is uploaded
-  if (image) {
-    sql += ', image = ?';
-    params.push(image);
-  }
-
-  sql += ' WHERE id = ?';
-  params.push(id);
-
-  db.query(sql, params, (err, result) => {
-    if (err) {
-      console.error("Database Error:", err);
-      return res.status(500).send("Something went wrong while updating the blog.");
     }
 
-    // Redirect to blogs list after successful update
-    res.redirect("/admin/blogs");
-  });
+    await db.query("DELETE FROM blogs WHERE id = ?", [id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Blog deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete Blog Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Database error: " + err.message,
+    });
+  }
 };
 
-
-
-
-
-
-
-//////////////////////////matka/////////////////////////////
-// ✅ IST Date helper
+// ================= MATKA THIRD PARTY API =================
 function getTodayDate() {
   const now = new Date();
-
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Kolkata",
     year: "numeric",
@@ -330,14 +325,13 @@ function getTodayDate() {
     day: "2-digit",
   }).formatToParts(now);
 
-  const year = parts.find(p => p.type === "year").value;
-  const month = parts.find(p => p.type === "month").value;
-  const day = parts.find(p => p.type === "day").value;
+  const year = parts.find((p) => p.type === "year").value;
+  const month = parts.find((p) => p.type === "month").value;
+  const day = parts.find((p) => p.type === "day").value;
 
   return `${year}-${month}-${day}`;
 }
 
-// ✅ Proper timeout fetch (BEST WAY)
 async function fetchWithTimeout(url, options, timeout = 30000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -353,20 +347,12 @@ async function fetchWithTimeout(url, options, timeout = 30000) {
   }
 }
 
-// ============================
-// 🚀 MAIN API
-// ============================
-export async function matkaapi(req, res){
-    const BASE_URL = "https://matkawebhook.matka-api.online";
+export async function matkaapi(req, res) {
+  const BASE_URL = "https://matkawebhook.matka-api.online";
   try {
     const username = "7290007278";
     const password = "Matka@1234";
 
-    console.log("🔹 Step 1: Fetching token...");
-
-    // =====================
-    // STEP 1: TOKEN
-    // =====================
     const tokenRes = await fetchWithTimeout(
       `${BASE_URL}/get-refresh-token-delhi`,
       {
@@ -374,16 +360,12 @@ export async function matkaapi(req, res){
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({
-          username,
-          password,
-        }),
+        body: new URLSearchParams({ username, password }),
       },
       30000
     );
 
     const tokenText = await tokenRes.text();
-
     let tokenData;
     try {
       tokenData = JSON.parse(tokenText);
@@ -405,13 +387,6 @@ export async function matkaapi(req, res){
 
     const refreshToken = tokenData.refresh_token;
 
-    console.log("✅ Token received:", refreshToken);
-
-    // =====================
-    // STEP 2: MARKET DATA
-    // =====================
-    console.log("🔹 Step 2: Fetching market data...");
-
     const marketRes = await fetchWithTimeout(
       `${BASE_URL}/market-data-delhi`,
       {
@@ -430,7 +405,6 @@ export async function matkaapi(req, res){
     );
 
     const marketText = await marketRes.text();
-
     let marketData;
     try {
       marketData = JSON.parse(marketText);
@@ -442,29 +416,19 @@ export async function matkaapi(req, res){
       });
     }
 
-    console.log("✅ Market data received");
-    
-    // =====================
-    // STEP 3: SEND TO LARAVEL API
-    // =====================
-    console.log("🔹 Step 3: Sending data to Laravel...");
-    
     const laravelRes = await fetchWithTimeout(
-      "https://bhaichara.sattakingpro.com/api/store-result", // 👈 change this
+      "https://bhaichara.sattakingpro.com/api/store-result",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          data: marketData, // 👈 send full market data
-        }),
+        body: JSON.stringify({ data: marketData }),
       },
       30000
     );
-    
+
     const laravelText = await laravelRes.text();
-    
     let laravelData;
     try {
       laravelData = JSON.parse(laravelText);
@@ -475,22 +439,15 @@ export async function matkaapi(req, res){
         raw: laravelText,
       });
     }
-    
-    console.log("✅ Data stored in Laravel");
-    
 
     return res.json({
       status: true,
       data: marketData,
     });
-
   } catch (error) {
-
-    // 🔥 FULL DEBUG (IMPORTANT)
-    console.error("❌ FULL ERROR OBJECT:", error);
+    console.error("Matka API Error:", error);
 
     let reason = "Unknown error";
-
     if (error.name === "AbortError") {
       reason = "Request timeout (API too slow or blocked)";
     } else if (error.code === "ENOTFOUND") {
@@ -509,10 +466,4 @@ export async function matkaapi(req, res){
       error: error.message,
     });
   }
-} 
-
-
-
-
-
-
+}

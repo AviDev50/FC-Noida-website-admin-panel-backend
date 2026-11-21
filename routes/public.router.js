@@ -3,7 +3,7 @@ import rateLimit from "express-rate-limit";
 import { uploadResume } from "../config/upload.js";
 import { loginAdmin } from "../controllers/jsonapi/auth.controller.js";
 import { createEnquiry, submitJobRequest, createSchoolUser } from "../controllers/jsonapi/enquiry.controller.js";
-import { getPublishedBlogs, getPublishedBlogBySlug } from "../controllers/jsonapi/publicBlogs.controller.js";
+import { getPublishedBlogs, getPublishedBlogBySlug,getPublicCategories, getPublishedBlogsByCategory } from "../controllers/jsonapi/publicBlogs.controller.js";
 import { createPgDemoRequest } from "../controllers/jsonapi/pgEnquiryController.js";
 
 
@@ -21,6 +21,8 @@ router.post("/school-inquiries", formLimiter, createSchoolUser);
 
 router.get("/blogs", getPublishedBlogs);
 router.get("/blogs/:slug", getPublishedBlogBySlug);
+router.get("/categories", getPublicCategories);
+router.get("/blogs/category/:category_id", getPublishedBlogsByCategory);
 
 router.post("/pg-demo-requests", formLimiter, createPgDemoRequest);
 

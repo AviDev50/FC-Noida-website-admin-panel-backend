@@ -1,49 +1,24 @@
+// Sirf bheje gaye (undefined nahi) whitelisted fields se UPDATE banata hai.
+// Isse "field clear karna" (null / "") bhi possible hai, aur undefined bind error nahi aata.
+export const buildUpdate = (table, idCol, id, data) => {
+  const keys = Object.keys(data);
+  const sql = `UPDATE ${table} SET ${keys.map((k) => `${k} = ?`).join(", ")} WHERE ${idCol} = ?`;
+  return [sql, [...keys.map((k) => data[k]), id]];
+};
 
+export const pickDefined = (body, fields) =>
+  Object.fromEntries(fields.filter((f) => body[f] !== undefined).map((f) => [f, body[f]]));
 
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "shiv_dev",
-//   password: "ii#3aQ708",
-//   database: "atulserver_fcnoidawebsite",
-// });
+export const emptyToNull = (v) => (typeof v === "string" && v.trim() === "" ? null : v);
 
-// import mysql from "mysql2";
+export const getPagination = (query, defLimit = 10, maxLimit = 100) => {
+  const page = Math.max(parseInt(query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(query.limit) || defLimit, 1), maxLimit);
+  return { page, limit, offset: (page - 1) * limit };
+};
 
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "rootmish@2025",
-//   database: "fcnoidawebsite",
-// });
-
-// db.connect((err) => {
-//   if (err) throw err;
-//   console.log("MySQL connected...");
-// });
-
-// export default db;
-
-
-import mysql from "mysql2/promise";
-
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "rootmish@2025",
-  database: "fcnoidawebsite",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+export const paginated = (data, total, { page, limit }) => ({
+  success: true,
+  data,
+  pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
 });
-
-// Initial connection test
-db.getConnection()
-  .then((conn) => {
-    console.log("MySQL connected (Promise Pool)...");
-    conn.release();
-  })
-  .catch((err) => {
-    console.error("Database connection failed:", err.message);
-  });
-
-export default db;

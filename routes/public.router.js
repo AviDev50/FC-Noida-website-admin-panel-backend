@@ -22,7 +22,7 @@ router.post("/school-inquiries", formLimiter, createSchoolUser);
 router.get("/blogs", getPublishedBlogs);
 router.get("/blogs/:slug", getPublishedBlogBySlug);
 router.get("/categories", getPublicCategories);
-router.get("/blogs/category/:category_id", getPublishedBlogsByCategory);
+router.get("/categories/:slug", getPublishedBlogsByCategory);
 
 router.post("/pg-demo-requests", formLimiter, createPgDemoRequest);
 

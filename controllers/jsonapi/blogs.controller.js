@@ -1,6 +1,6 @@
 import db from "../../config/db.js";
 import { buildUpdate, pickDefined, emptyToNull, getPagination, paginated } from "../../utils/db.js";
-import { removeFile, UPLOAD_DIR } from "../../utils/files.js";
+import { removeFile, imageUrl, UPLOAD_DIR } from "../../utils/files.js";
 import { bad, isStr } from "../../utils/validate.js";
 
 const STATUSES = ["draft", "published"];
@@ -29,7 +29,7 @@ export const getBlogsWithCategory = async (req, res, next) => {
        ${clause} ORDER BY b.id DESC LIMIT ? OFFSET ?`,
       [...params, pg.limit, pg.offset]
     );
-    res.json(paginated(rows, total, pg));
+   res.json(paginated(rows.map((r) => ({ ...r, image_url: imageUrl(r.image) })), total, pg));
   } catch (e) { next(e); }
 };
 
@@ -42,7 +42,7 @@ export const getBlogById = async (req, res, next) => {
       [req.params.id]
     );
     if (!rows.length) return res.status(404).json({ success: false, message: "Blog not found." });
-    res.json({ success: true, data: rows[0] });
+  res.json({ success: true, data: { ...rows[0], image_url: imageUrl(rows[0].image) } });
   } catch (e) { next(e); }
 };
 

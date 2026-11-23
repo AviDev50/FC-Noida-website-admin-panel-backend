@@ -1,69 +1,46 @@
+// server.js
+import { PORT, FRONTEND_URLS } from "./config/env.js"; // sabse pehle: dotenv load + env validation
 import express from "express";
 import cors from "cors";
-import path from "path";
 import helmet from "helmet";
-import { fileURLToPath } from "url";
 import authMiddleware from "./middlewares/auth.js";
 import publicRoutes from "./routes/public.router.js";
 import adminRoutes from "./routes/admin.router.js";
 import { notFound, errorHandler } from "./middlewares/errorHandler.js";
+import { UPLOAD_DIR } from "./utils/files.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-const PORT = 8000;
+// Security headers (images doosre origin se load ho sakein)
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
-const allowedOrigins = [
-  "https://fc-noida-website-admin-panel-fronte.vercel.app",
-];
-
-// Security headers
-app.use(
-  helmet({
-    crossOriginResourcePolicy: {
-      policy: "cross-origin",
-    },
-  })
-);
-
-// CORS - Allow all origins
+// CORS: sirf whitelisted origins
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: FRONTEND_URLS,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-    optionsSuccessStatus: 204,
   })
 );
 
-// Body parser
+// Body parsers
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Uploads
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "public/uploads"))
-);
+// Public uploads (blog/employee images). Resumes yahan se serve nahi hote.
+app.use("/uploads", express.static(UPLOAD_DIR));
 
 // Health check
-app.get("/health", (req, res) => {
-  res.json({ ok: true, message: "Server running" });
-});
+app.get("/health", (req, res) => res.json({ ok: true }));
 
 // Routes
 app.use("/api", publicRoutes);
 app.use("/api/admin", authMiddleware, adminRoutes);
 
-// Error handling
+// 404 + global error handler (hamesha last me)
 app.use(notFound);
 app.use(errorHandler);
 
-// Server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled rejection:", err);
-});
+process.on("unhandledRejection", (err) => console.error("Unhandled rejection:", err));

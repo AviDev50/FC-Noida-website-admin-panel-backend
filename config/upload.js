@@ -2,6 +2,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
+import { UPLOAD_DIR, RESUME_DIR } from "../utils/files.js";
 
 const makeUpload = (dir, allowed, maxMB) => {
   fs.mkdirSync(dir, { recursive: true });
@@ -26,14 +27,15 @@ const makeUpload = (dir, allowed, maxMB) => {
 
 // Public (served via /uploads)
 export const uploadImage = makeUpload(
-  "public/uploads",
+  UPLOAD_DIR,
   { "image/jpeg": [".jpg", ".jpeg"], "image/png": [".png"], "image/webp": [".webp"] },
   2
 );
 
+
 // Private (served only via admin route)
 export const uploadResume = makeUpload(
-  "private/resumes",
+  RESUME_DIR,
   {
     "application/pdf": [".pdf"],
     "application/msword": [".doc"],
